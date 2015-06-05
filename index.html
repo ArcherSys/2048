@@ -5,10 +5,12 @@ require_once $_SERVER["DOCUMENT_ROOT"]."/includes/View.php";
 require_once "archersys-includes/TileRow.php";
 
 require_once "archersys-includes/GameMessage.php";
-
+require_once $_SERVER["DOCUMENT_ROOT"]."/includes/AttentiveMessage.php";
 require_once "archersys-includes/GameContainer.php";
 
 require_once "archersys-includes/TileContainer.php";
+require_once "archersys-includes/GameContainer.php";
+require_once "archersys-includes/Heading.php";
 require_once $_SERVER["DOCUMENT_ROOT"]."/includes/AppleManager.php";
 use ArcherSys\Viewer\Contrib\View;
 use ArcherSys\Config\AppleManager;
@@ -18,47 +20,30 @@ use Game2048\GameBoard\Grid;
 use Game2048\Info\GameMessage;
 use Game2048\Info\RetryButton;
 use Game2048\Info\KeepPlayingButton;
-
+use Game2048\Info\Heading;
+use ArcherSys\Text\StrongAttentionGrabber;
+use Game2048\Info\AboveGame;
 
 use Game2048\Containers\GameContainer;
 use Game2048\Containers\TileContainer;
 $tfe = new View("2048",function(){
    echo '<meta charset="utf-8">';
    AppleManager::addTouchIcon("meta/apple-touch-icon.png");
-  ?>
-
-  <link href="style/main.css" rel="stylesheet" type="text/css">
-  <link rel="shortcut icon" href="favicon.ico">
-  <link rel="apple-touch-startup-image" href="meta/apple-touch-startup-image-640x1096.png" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)"> <!-- iPhone 5+ -->
-  <link rel="apple-touch-startup-image" href="meta/apple-touch-startup-image-640x920.png"  media="(device-width: 320px) and (device-height: 480px) and (-webkit-device-pixel-ratio: 2)"> <!-- iPhone, retina -->
-<?php
+    include "archersys-includes\ssi\appleconfig.php";
        AppleManager::enableIPhoneWebAppMode();
-?>
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
-<?php
+    include "archersys-includes\ssi\meta.php";
 },function(){
-?>
-  <div class="container">
-    <div class="heading">
-      <h1 class="title">2048</h1>
-      <div class="scores-container">
-        <div class="score-container">0</div>
-        <div class="best-container">0</div>
-      </div>
-    </div>
+echo '<div class="container">';
 
-    
-    <div class="above-game">
+      $hea = new Heading();
+      $hea->addTitle("2048");
+      $hea->addScoreContainer();
+      $hea->end();
+      $ag = new AboveGame();
       
-       <p class="game-intro">Join the numbers and get to the <strong>2048 tile!</strong></p>
-      <a class="restart-button">New Game</a>
-    </div>
-      
-<?php 
+       $ag->addIntro('Join the numbers and get to the'.new StrongAttentionGrabber('2048 Tile!').'</p>');
+       $ag->addRestartButton('New Game');
+        
 $gamec = new GameContainer(function(){
     $gamemess = new GameMessage();
     $gamemess->addButtons(new KeepPlayingButton("Keep Playing 2048!"),new RetryButton("Retry 2048!"));
@@ -89,39 +74,12 @@ for($i = 0; $i < 4; $i++){
 $ggrid->end();
   $tc = new TileContainer();
   });
-?>
+include "archersys-includes/ssi/explain.php";
+include "archersys-includes/ssi/scripts.php";
        
         
       
-        
+    echo '</div>';
       
-
-      
-  
-
-    <p class="game-explanation">
-      <strong class="important">How to play:</strong> Use your <strong>arrow keys</strong> to move the tiles. When two tiles with the same number touch, they <strong>merge into one!</strong>
-    </p>
-    <hr>
-    <p>
-    <strong class="important">Note:</strong> This site is the official version of 2048. You can play it on your phone via <a href="http://git.io/2048">http://git.io/2048.</a> All other apps or sites are derivatives or fakes, and should be used with caution.
-    </p>
-    <hr>
-    <p>
-    Created by <a href="http://gabrielecirulli.com" target="_blank">Gabriele Cirulli.</a> Based on <a href="https://itunes.apple.com/us/app/1024!/id823499224" target="_blank">1024 by Veewo Studio</a> and conceptually similar to <a href="http://asherv.com/threes/" target="_blank">Threes by Asher Vollmer.</a>
-    </p>
-  </div>
-
-  <script src="js/bind_polyfill.js"></script>
-  <script src="js/classlist_polyfill.js"></script>
-  <script src="js/animframe_polyfill.js"></script>
-  <script src="js/keyboard_input_manager.js"></script>
-  <script src="js/html_actuator.js"></script>
-  <script src="js/grid.js"></script>
-  <script src="js/tile.js"></script>
-  <script src="js/local_storage_manager.js"></script>
-  <script src="js/game_manager.js"></script>
-  <script src="js/application.js"></script>
-<?php
 });
 ?>
